@@ -33,15 +33,41 @@ class Usuario extends ActiveRecord{
     
     //Mensajes de validación para la creación de una cuenta
 
-    public function validarNuevaCuenta(){
-        if(!$this -> nombre){
-            self::$alertas['error'][]='El nombre del cliente es obligatorio';
-        }
-        if(!$this -> apellido){
-            self::$alertas['error'][]='El apellido del cliente es obligatorio';
+        public function validarNuevaCuenta(){
+            if(!$this -> nombre){
+                self::$alertas['error'][]='El nombre es obligatorio';
+            }
+            if(!$this -> apellido){
+                self::$alertas['error'][]='El apellido es obligatorio';
+            }
+            if(!$this -> email){
+                self::$alertas['error'][]='El email es obligatorio';
+            }
+            if(!$this -> password){
+                self::$alertas['error'][]='El password del cliente es obligatorio';
+            }
+            if(strlen($this -> password) < 6){
+                self::$alertas['error'][]='El password debe contener al menos 6 caracteres';
+            }
+
+            return self::$alertas;
+
+        }   
+
+        //Revisa si el usuario ya existe
+        public function existeUsuario(){
+            $query = "SELECT * FROM ". self::$tabla . " WHERE email = '" . $this->email . "' LIMIT 1";
+
+
+            $resultado = self::$db->query($query);
+
+            if($resultado->num_rows){
+                self::$alertas['error'][] = 'El Usuarrio ya esta registrado';
+            }
+
+        return $resultado;
         }
 
-        return self::$alertas;
 
-    }   
+
 }
