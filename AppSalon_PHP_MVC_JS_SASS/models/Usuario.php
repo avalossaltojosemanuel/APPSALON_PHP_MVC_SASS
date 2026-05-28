@@ -26,8 +26,8 @@ class Usuario extends ActiveRecord{
         $this->email = $args['email'] ?? '';
         $this->password = $args['password'] ?? '';
         $this->telefono = $args['telefono'] ?? '';
-        $this->admin = $args['admin'] ?? null;
-        $this->confirmado = $args['confirmado'] ?? null;
+        $this->admin = $args['admin'] ?? 0;
+        $this->confirmado = $args['confirmado'] ?? 0;
         $this->token = $args['token'] ?? '';
     }
     
@@ -52,7 +52,28 @@ class Usuario extends ActiveRecord{
 
             return self::$alertas;
 
-        }   
+        }  
+        
+        public function validarLogin(){
+            if(!$this->email){
+                self::$alertas['error'][] = 'El email es Obligatorio';  
+            }
+            if(!$this->password){
+                self::$alertas['error'][] = 'El Password es Obligatorio';  
+            }
+
+        return self::$alertas;
+
+        }
+
+        public function validarEmail(){
+            if(!$this->email){
+                self::$alertas['error'][] = 'El email es Obligatorio';  
+            }
+            return self::$alertas;
+
+        }
+
 
         //Revisa si el usuario ya existe
         public function existeUsuario(){
@@ -67,6 +88,25 @@ class Usuario extends ActiveRecord{
 
         return $resultado;
         }
+
+        public function hashPassword(){
+            $this->password = password_hash($this->password, PASSWORD_BCRYPT);
+        }
+
+        public function crearToken(){
+            $this->token= uniqid();
+        }
+
+        public function comprobarPasswordANDVerificado($password){
+            $resultado = password_verify($password, $this->password);
+           
+            if(!$resultado || !$this->confirmado){
+                self::$alertas['error'][] = 'Password incorrecta o tu cuenta no ha sido confirmada';
+            }else {
+                return true;
+        }
+        }
+
 
 
 

@@ -9,14 +9,17 @@
     text-align: center;
     font-weight: v.$bold;
     text-transform: uppercase;
+    border-radius: 2rem;
 
 
     &.error {
         background-color: v.$rojo;
+        border-radius: 2rem;
     }
 
     &.exito {
         background-color: v.$verde;
+        border-radius: 2rem;
     }
 
 }
