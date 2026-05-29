@@ -3,7 +3,7 @@
 
 <div id="app">
     <nav class="tabs">
-        <button type="button" data-paso="1">Servicios</button>
+        <button class="actual" type="button" data-paso="1">Servicios</button>
         <button type="button" data-paso="2">Información Cita</button>
         <button type="button" data-paso="3">Resumen</button>
     </nav>
@@ -34,7 +34,7 @@
             <div class="campo">
                 <label for="fecha">Fecha</label>
                 <input
-                id="Fecha" 
+                id="fecha" 
                 type="date">
             </div>
 
@@ -43,7 +43,7 @@
                 <input
                 id="hora" 
                 type="time"
-                placeholder="Tu Nombre">
+                >
             </div>
         </div>
 
@@ -52,7 +52,21 @@
     <div id="paso-3" class="seccion">
         <h2>Resumen</h2>
         <p class="text-center">Verifica que la información sea correcta</p>
-        
     </div>
 
+    <div class="paginacion">
+        <button 
+        id="anterior"
+        class="boton"
+        >&laquo; Anterior</button> <button 
+        id="siguiente"
+        class="boton"
+        >Siguiente &raquo;</button> 
+     </div>
 </div>
+
+<?php
+    $script = "
+    <script src='build/js/app.js'></script>
+    ";
+?>
