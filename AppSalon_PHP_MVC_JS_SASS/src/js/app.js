@@ -22,7 +22,10 @@ function iniciarApp(){
     paginaSiguiente();
 
     consultarAPI();//CONSULTAR LA API EN EL BACKEND DE PHP
+    nombreCliente();
 }
+
+
 
 
 function mostrarSeccion(){
@@ -160,4 +163,9 @@ function seleccionarServicio(servicio){
     }
     
 
+}
+
+function nombreCliente(){
+    const nombre = document.querySelector('#nombre').value;
+    cita.nombre = nombre;
 }
