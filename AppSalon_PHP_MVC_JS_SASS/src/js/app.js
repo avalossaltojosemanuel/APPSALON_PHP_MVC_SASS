@@ -22,7 +22,8 @@ function iniciarApp(){
     paginaSiguiente();
 
     consultarAPI();//CONSULTAR LA API EN EL BACKEND DE PHP
-    nombreCliente();
+    nombreCliente(); //añade el nombre del cliente a la cita
+    seleccionarFecha(); //agrega la fecha de la cita
 }
 
 
@@ -168,4 +169,19 @@ function seleccionarServicio(servicio){
 function nombreCliente(){
     const nombre = document.querySelector('#nombre').value;
     cita.nombre = nombre;
+}
+
+function seleccionarFecha(){
+    const inputFecha = document.querySelector('#fecha');
+    inputFecha.addEventListener('input', function(e){
+
+        const dia = new Date(e.target.value).getUTCDay(); //obtener la fecha en milisegundos
+        
+        if( [6, 0].includes (dia) ){
+            e.target.value = '';
+                console.log('Sabados y Domingos no abrimos');
+        } else{
+                cita.fecha = e.target.value;
+        }
+    });
 }
