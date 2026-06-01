@@ -23,7 +23,8 @@ function iniciarApp(){
 
     consultarAPI();//CONSULTAR LA API EN EL BACKEND DE PHP
     nombreCliente(); //añade el nombre del cliente a la cita
-    seleccionarFecha(); //agrega la fecha de la cita
+    seleccionarFecha(); //agrega la fecha de la cita en el objeto
+    seleccionarHora(); //agrega la hora de la cita en el objeto
 }
 
 
@@ -179,9 +180,45 @@ function seleccionarFecha(){
         
         if( [6, 0].includes (dia) ){
             e.target.value = '';
-                console.log('Sabados y Domingos no abrimos');
+            mostrarAlerta('Fines de semana no permitidos', 'error');
         } else{
                 cita.fecha = e.target.value;
         }
     });
 }
+
+function seleccionarHora(){
+    const inputHora = document.querySelector('#hora');
+    inputHora.addEventListener('input', function(e){
+        const horaCita = e.target.value;
+        const hora = horaCita.split(":")[0];
+        if(hora < 10 || hora > 18){
+            e.target.value = '';
+            mostrarAlerta('Hora no valida', 'error');
+        } else{
+            cita.hora = e.target.value;
+        }
+    });
+}
+
+function mostrarAlerta(mensaje, tipo){
+
+    //previene que se genere mas de una alerta
+    const alertaPrevia = document.querySelector('.alerta');
+    if(alertaPrevia) return;
+
+    //scripting para crear una alerta 
+    const alerta = document.createElement('DIV');
+    alerta.textContent = mensaje;
+    alerta.classList.add('alerta');
+    alerta.classList.add(tipo);
+
+    const formulario = document.querySelector('.formulario');
+    formulario.appendChild(alerta);
+
+    //eliminar la alerta despues de 3 segundos
+    setTimeout( () => {
+        alerta.remove();
+    }, 3000);
+}
+
