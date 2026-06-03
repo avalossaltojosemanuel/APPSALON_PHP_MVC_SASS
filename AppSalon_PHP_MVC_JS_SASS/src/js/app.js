@@ -308,11 +308,33 @@ function mostrarResumen(){
     const horaCita= document.createElement('P');
     horaCita.innerHTML = `<span>Hora:</span> ${hora} Horas`;
 
+    //Boton para crear una cita
+    const botonReservar = document.createElement('BUTTON');
+    botonReservar.classList.add('boton');
+    botonReservar.textContent = 'Reservar Cita';
+    botonReservar.onclick = reservarCita;
+
     resumen.appendChild(nombreCliente);
     resumen.appendChild(fechaCita);
     resumen.appendChild(horaCita);
-   
 
+    resumen.appendChild(botonReservar);
+   
+}
+
+async function reservarCita(){
+    const datos = new FormData();
+    datos.append('nombre', 'jose');
+
+    //peticion hacia la api
+    const url = 'http://localhost:3000/api/citas';
+    const respuesta = await fetch (url, {
+        method: 'POST',
+        body: datos
+    });
     
-    
+    const resultado = await respuesta.json();
+
+
+    //console.log([...datos]);
 }
