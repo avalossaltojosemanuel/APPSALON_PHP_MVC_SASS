@@ -3,6 +3,7 @@ const pasoInicial= 1;
 const pasoFinal = 3;
 
 const cita = {
+    id: '',
     nombre: '',
     fecha: '',
     hora: '',
@@ -23,9 +24,11 @@ function iniciarApp(){
 
     consultarAPI();//CONSULTAR LA API EN EL BACKEND DE PHP
     
+    idCliente(); //obtener el id del cliente logueado
     nombreCliente(); //añade el nombre del cliente a la cita
     seleccionarFecha(); //agrega la fecha de la cita en el objeto
     seleccionarHora(); //agrega la hora de la cita en el objeto
+
     mostrarResumen(); //muestra el resumen de la cita creada
 }
 
@@ -172,6 +175,10 @@ function seleccionarServicio(servicio){
     }
     
 
+}
+function idCliente(){
+    const id = document.querySelector('#id').value;
+    cita.id = id;
 }
 
 function nombreCliente(){
@@ -323,9 +330,22 @@ function mostrarResumen(){
 }
 
 async function reservarCita(){
-    const datos = new FormData();
-    datos.append('nombre', 'jose');
 
+    const {nombre,fecha, hora, servicios, id}= cita;
+
+    const idServicios = servicios.map(servicio => servicio.id);
+
+    const datos = new FormData();
+
+    datos.append('fecha', fecha);
+    datos.append('hora', hora);
+    datos.append('usuarioId', id);
+    datos.append('servicios', idServicios); 
+
+    //console.log([...datos]);
+    
+try {
+      
     //peticion hacia la api
     const url = 'http://localhost:3000/api/citas';
     const respuesta = await fetch (url, {
@@ -334,7 +354,80 @@ async function reservarCita(){
     });
     
     const resultado = await respuesta.json();
+    console.log(resultado.resultado);
 
+  
+        
+        if(resultado.resultado) {
+            // Si el backend responde bien, pasas 'exito'
+            mostrarAlertaNativa('¡Tu cita ha sido creada correctamente!', 'exito');
+        } else {
+            // Si el backend responde pero con un error de validación lógico
+            mostrarAlertaNativa('Hubo un error al procesar tu cita.', 'error');
+        }
 
-    //console.log([...datos]);
+    } catch (error) {
+        // CATCH: Si se cae el servidor, no hay internet, o el JSON se rompe
+        console.log(error);
+        mostrarAlertaNativa('No se pudo conectar con el servidor. Inténtalo más tarde.', 'error');
+    }
+
+}
+
+// Función del recuadro flotante modificada para ser dinámica
+function mostrarAlertaNativa(mensaje, tipo) {
+    const alertaPrevia = document.querySelector('.modal-alerta');
+    if(alertaPrevia) alertaPrevia.remove();
+
+    // 1. Contenedor/fondo oscuro translúcido (Overlay)
+    const overlay = document.createElement('DIV');
+    overlay.classList.add('modal-alerta');
+
+    // 2. Recuadro blanco flotante
+    const cuadroAlerta = document.createElement('DIV');
+    cuadroAlerta.classList.add('cuadro-alerta', tipo);
+
+    // 3. Crear el círculo para el icono (Ahora dinámico)
+    const iconoContenedor = document.createElement('DIV');
+    iconoContenedor.classList.add('icono-alerta');
+    
+    const icono = document.createElement('SPAN');
+    // Evaluamos el tipo para poner palomita (✔) o equis (✖)
+    if (tipo === 'exito') {
+        icono.innerHTML = '&#10004;'; // Checkmark ✔
+    } else {
+        icono.innerHTML = '&#10006;'; // Crossmark ✖
+    }
+    iconoContenedor.appendChild(icono);
+
+    // 4. Contenido de texto (Título dinámico)
+    const titulo = document.createElement('H3');
+    if (tipo === 'exito') {
+        titulo.textContent = 'Cita Creada';
+    } else {
+        titulo.textContent = 'Error';
+    }
+    
+    const texto = document.createElement('P');
+    texto.textContent = mensaje;
+
+    const botonOk = document.createElement('BUTTON');
+    botonOk.textContent = 'OK';
+    botonOk.classList.add('boton-modal');
+    
+    // Cerrar y recargar la página al presionar OK
+    botonOk.onclick = function() {
+        overlay.remove();
+        window.location.reload(); 
+    };
+
+    // Armar la estructura dentro del cuadro blanco
+    cuadroAlerta.appendChild(iconoContenedor); 
+    cuadroAlerta.appendChild(titulo);
+    cuadroAlerta.appendChild(texto);
+    cuadroAlerta.appendChild(botonOk);
+    overlay.appendChild(cuadroAlerta);
+
+    // Inyectar al body
+    document.querySelector('body').appendChild(overlay);
 }

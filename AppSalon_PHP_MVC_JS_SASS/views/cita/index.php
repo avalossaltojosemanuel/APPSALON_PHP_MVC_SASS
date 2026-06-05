@@ -19,7 +19,7 @@
         <h2>Tus Datos y Cita</h2>
         <p class="text-center">Coloca tus datos y fecha de tu cita</p>
 
-        <div class="formulario">
+        <form class="formulario">
             <div class="campo">
                 <label for="nombre">Nombre</label>
                 <input
@@ -46,9 +46,9 @@
                 type="time"
                 >
             </div>
-        </div>
+            <input type ="hidden" id="id"  value ="<?php echo $id; ?>">     
+        </form>
 
-        
     </div>
     <div id="paso-3" class="seccion contenido-resumen">
         <h2>Resumen</h2>
