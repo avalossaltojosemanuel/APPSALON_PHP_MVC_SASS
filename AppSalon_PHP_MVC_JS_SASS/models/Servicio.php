@@ -2,6 +2,7 @@
 
 namespace Model;
 
+
 class Servicio extends ActiveRecord{
     //Base de Datos
     protected static $tabla = 'servicios';
@@ -18,5 +19,21 @@ class Servicio extends ActiveRecord{
         $this->precio = $args['precio'] ?? '';
     }
 
+
+    
+    public function validar()
+    {
+        if(!$this->nombre){
+            self::$alertas['error'][]='El Nombre del servicio es obligatorio';
+        }
+        if(!$this->precio){
+            self::$alertas['error'][]='El Precio del servicio es obligatorio';
+        }
+        if(!is_numeric($this->precio)){
+            self::$alertas['error'][]='El Precio no es valido';
+        }
+
+        return self::$alertas;
+    }
 
 }

@@ -29,3 +29,9 @@ function isAuth() : void{
         header ('Location: /');  //sino esta autenticado lo regresa al login
     }
 }
+
+function isAdmin() : void{
+    if (!isset($_SESSION['admin']) ){
+        header('Location: /');
+    }
+}

@@ -9,7 +9,17 @@ class AdminController{
     public static function index(Router $router){
         session_start();
 
-        $fecha = date ('Y-m-d');
+        isAdmin();
+
+        $fecha = $_GET['fecha'] ?? date ('Y-m-d');
+        $fechas = explode ('-', $fecha);
+
+        if( !checkdate($fechas[1], $fechas[2], $fechas[0])){
+            header('Location : /404');
+        }
+
+
+    
         
 
         //Consultar la BASE DE DATOS
@@ -22,7 +32,7 @@ class AdminController{
         $consulta .= " ON citasServicios.citaId=citas.id ";
         $consulta .= " LEFT OUTER JOIN servicios ";
         $consulta .= " ON servicios.id=citasServicios.servicioId ";
-        //$consulta .= " WHERE fecha =  '${fecha}' ";
+        $consulta .= " WHERE fecha =  '${fecha}' ";
 
        $citas = AdminCita::SQL($consulta);
        
